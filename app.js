@@ -1,5 +1,3 @@
-const { useState, useMemo } = React;
-
 function SearchIcon() {
     return (
         <svg className="search-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -8,23 +6,28 @@ function SearchIcon() {
     );
 }
 
-function Card({ entry, searchTerm }) {
-    const formatDate = (dateString) => {
+function Card(props) {
+    var entry = props.entry;
+    var searchTerm = props.searchTerm;
+
+    function formatDate(dateString) {
         return new Date(dateString).toLocaleDateString('en-US', {
             year: 'numeric',
             month: 'short',
             day: 'numeric'
         });
-    };
+    }
 
-    const highlightText = (text, term) => {
+    function highlightText(text, term) {
         if (!term) return text;
-        const regex = new RegExp(`(${term})`, 'gi');
-        const parts = text.split(regex);
-        return parts.map((part, i) => 
-            regex.test(part) ? <span key={i} className="highlight">{part}</span> : part
-        );
-    };
+        var regex = new RegExp("(" + term + ")", 'gi');
+        var parts = text.split(regex);
+        return parts.map(function(part, i) {
+            return regex.test(part) ? 
+                React.createElement("span", { key: i, className: "highlight" }, part) : 
+                part;
+        });
+    }
 
     return (
         <div className="card">
@@ -38,11 +41,13 @@ function Card({ entry, searchTerm }) {
             </div>
             {entry.sharedTerms && (
                 <div className="shared-terms">
-                    {entry.sharedTerms.map((term, index) => (
-                        <span key={index} className="term-tag">
-                            {term}
-                        </span>
-                    ))}
+                    {entry.sharedTerms.map(function(term, index) {
+                        return (
+                            <span key={index} className="term-tag">
+                                {term}
+                            </span>
+                        );
+                    })}
                 </div>
             )}
         </div>
@@ -50,22 +55,24 @@ function Card({ entry, searchTerm }) {
 }
 
 function App() {
-    const [searchTerm, setSearchTerm] = useState('');
+    var [searchTerm, setSearchTerm] = React.useState('');
 
-    const filteredEntries = useMemo(() => {
-        if (!searchTerm.trim()) return kosha_entries;
+    var filteredEntries = kosha_entries.filter(function(entry) {
+        if (!searchTerm.trim()) return true;
         
-        const searchTermLower = searchTerm.toLowerCase();
-        return kosha_entries.filter(function(entry) {
-            const termMatch = entry.term.toLowerCase().includes(searchTermLower);
-            const contentMatch = entry.content.toLowerCase().includes(searchTermLower);
-            const sharedTermMatch = entry.sharedTerms && entry.sharedTerms.some(function(term) {
+        var searchTermLower = searchTerm.toLowerCase();
+        var termMatch = entry.term.toLowerCase().includes(searchTermLower);
+        var contentMatch = entry.content.toLowerCase().includes(searchTermLower);
+        var sharedTermMatch = false;
+        
+        if (entry.sharedTerms) {
+            sharedTermMatch = entry.sharedTerms.some(function(term) {
                 return term.toLowerCase().includes(searchTermLower);
             });
-            
-            return termMatch || contentMatch || sharedTermMatch;
-        });
-    }, [searchTerm]);
+        }
+        
+        return termMatch || contentMatch || sharedTermMatch;
+    });
 
     return (
         <div className="container">
@@ -102,4 +109,7 @@ function App() {
     );
 }
 
-ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+ReactDOM.render(
+    <App />,
+    document.getElementById('root')
+);
