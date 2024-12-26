@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DivyaKosha - Spiritual Terms Dictionary</title>
+    <meta name="description" content="Interactive dictionary for spiritual terms with advanced search capabilities">
+    <link rel="stylesheet" href="./styles.css">
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="./favicon.ico">
+    <!-- React Libraries -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+    <!-- Data -->
+    <script src="./data.js"></script>
+    <!-- Application -->
+    <script type="text/babel" src="./app.js"></script>
+</body>
+</html>
