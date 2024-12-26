@@ -56,12 +56,12 @@ function App() {
         if (!searchTerm.trim()) return kosha_entries;
         
         const searchTermLower = searchTerm.toLowerCase();
-        return kosha_entries.filter(entry => {
+        return kosha_entries.filter(function(entry) {
             const termMatch = entry.term.toLowerCase().includes(searchTermLower);
             const contentMatch = entry.content.toLowerCase().includes(searchTermLower);
-            const sharedTermMatch = entry.sharedTerms?.some(term => 
-                term.toLowerCase().includes(searchTermLower)
-            );
+            const sharedTermMatch = entry.sharedTerms && entry.sharedTerms.some(function(term) {
+                return term.toLowerCase().includes(searchTermLower);
+            });
             
             return termMatch || contentMatch || sharedTermMatch;
         });
@@ -80,7 +80,7 @@ function App() {
                     className="search-input"
                     placeholder="Search terms..."
                     value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
+                    onChange={function(e) { setSearchTerm(e.target.value); }}
                 />
                 <SearchIcon />
             </div>
@@ -89,15 +89,17 @@ function App() {
                 Type to search through terms, definitions, and related concepts
             </div>
 
-            {filteredEntries.map(entry => (
-                <Card 
-                    key={entry.id} 
-                    entry={entry} 
-                    searchTerm={searchTerm}
-                />
-            ))}
+            {filteredEntries.map(function(entry) {
+                return (
+                    <Card 
+                        key={entry.id} 
+                        entry={entry} 
+                        searchTerm={searchTerm}
+                    />
+                );
+            })}
         </div>
     );
 }
 
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
